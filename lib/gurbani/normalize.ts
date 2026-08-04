@@ -10,7 +10,35 @@ export function normalizeVerse(rawVerse: any): NormalizedVerse {
   const verse: Verse = rawVerse?.verse || rawVerse;
 
   const gurmukhiText = verse.verse?.unicode || verse.verse?.gurmukhi || "";
-  const larivaarText = verse.larivaar?.unicode || verse.larivaar?.gurmukhi || "";
+
+  // Extract English meaning
+  const meaningEn = 
+    verse.translation?.en?.bdb || 
+    verse.translation?.en?.ms || 
+    verse.translation?.en?.ssk || 
+    (typeof verse.translation?.en === "string" ? verse.translation?.en : null);
+
+  // Extract Punjabi meaning with full unicode/gurmukhi fallbacks across all scholar fields (ss, bdb, ms, ft)
+  const meaningPa = 
+    verse.translation?.pu?.ss?.unicode || 
+    verse.translation?.pu?.ss?.gurmukhi || 
+    verse.translation?.pu?.bdb?.unicode || 
+    verse.translation?.pu?.bdb?.gurmukhi || 
+    verse.translation?.pu?.ms?.unicode || 
+    verse.translation?.pu?.ms?.gurmukhi || 
+    verse.translation?.pu?.ft?.unicode || 
+    (typeof verse.translation?.pu?.ft === "string" ? verse.translation?.pu?.ft : null) || 
+    (typeof verse.translation?.pu?.ss === "string" ? verse.translation?.pu?.ss : null) || 
+    (typeof verse.translation?.pu === "string" ? verse.translation?.pu : null);
+
+  // Extract Hindi meaning (if available in API) or fallback gracefully to English/Punjabi
+  const hiObj = verse.translation?.hi as any;
+  const meaningHi = 
+    hiObj?.ss || 
+    hiObj?.sts || 
+    (typeof verse.translation?.hi === "string" ? verse.translation?.hi : null) || 
+    meaningEn || 
+    meaningPa;
 
   return {
     id: verse.verseId || Math.random(),
@@ -20,17 +48,9 @@ export function normalizeVerse(rawVerse: any): NormalizedVerse {
       hi: verse.transliteration?.hindi || verse.transliteration?.hi || "",
     },
     meaning: {
-      // Fallback chain: bdb > ms > ssk
-      en: verse.translation?.en?.bdb || verse.translation?.en?.ms || verse.translation?.en?.ssk || null,
-      // Fallback chain: ss > sts
-      hi: verse.translation?.hi?.ss || verse.translation?.hi?.sts || null,
-      // Fallback chain: ss > ft > bdb > ms
-      pa: 
-        verse.translation?.pu?.ss?.unicode || 
-        verse.translation?.pu?.ss?.gurmukhi || 
-        verse.translation?.pu?.ft?.unicode || 
-        (typeof verse.translation?.pu?.ft === "string" ? verse.translation?.pu?.ft : null) || 
-        null,
+      en: meaningEn,
+      hi: meaningHi,
+      pa: meaningPa || meaningEn,
     },
     pageNo: verse.pageNo,
   };

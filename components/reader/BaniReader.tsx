@@ -26,36 +26,41 @@ export function BaniReader({ bani }: { bani: NormalizedBani }) {
       </div>
 
       <div className="space-y-12">
-        {bani.verses.map((verse: NormalizedVerse) => (
-          <div key={verse.id} className="text-center flex flex-col items-center gap-3 group">
-            <p 
-              className="font-gurbani leading-relaxed text-foreground transition-all duration-300 group-hover:text-primary"
-              style={{ fontSize: `${settings.fontSize * 1.5}rem` }}
-            >
-              {applyLarivaar(verse.gurmukhi)}
-            </p>
+        {bani.verses.map((verse: NormalizedVerse) => {
+          const displayMeaning = 
+            settings.translation === "en" ? verse.meaning.en :
+            settings.translation === "hi" ? (verse.meaning.hi || verse.meaning.en) :
+            (verse.meaning.pa || verse.meaning.en);
 
-            {settings.transliteration !== "off" && (
+          return (
+            <div key={verse.id} className="text-center flex flex-col items-center gap-3 group">
               <p 
-                className="text-muted-foreground italic"
-                style={{ fontSize: `${settings.fontSize * 1}rem` }}
+                className="font-gurbani leading-relaxed text-foreground transition-all duration-300 group-hover:text-primary"
+                style={{ fontSize: `${settings.fontSize * 1.5}rem` }}
               >
-                {settings.transliteration === "en" ? verse.transliteration.en : verse.transliteration.hi}
+                {applyLarivaar(verse.gurmukhi)}
               </p>
-            )}
 
-            {settings.translation !== "off" && (
-              <p 
-                className="text-foreground/90 font-medium max-w-xl mt-2"
-                style={{ fontSize: `${settings.fontSize * 0.9}rem` }}
-              >
-                {settings.translation === "en" ? verse.meaning.en : 
-                 settings.translation === "hi" ? verse.meaning.hi : 
-                 verse.meaning.pa}
-              </p>
-            )}
-          </div>
-        ))}
+              {settings.transliteration !== "off" && (
+                <p 
+                  className="text-muted-foreground italic"
+                  style={{ fontSize: `${settings.fontSize * 1}rem` }}
+                >
+                  {settings.transliteration === "en" ? verse.transliteration.en : verse.transliteration.hi}
+                </p>
+              )}
+
+              {settings.translation !== "off" && displayMeaning && (
+                <p 
+                  className="text-foreground/90 font-medium max-w-xl mt-2"
+                  style={{ fontSize: `${settings.fontSize * 0.9}rem` }}
+                >
+                  {displayMeaning}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
