@@ -1,27 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useSettings } from "./SettingsProvider";
-import { Settings, X, Type, AlignLeft, Sun, Moon, Monitor } from "lucide-react";
+import { X, Type, AlignLeft, Sun, Moon, Monitor } from "lucide-react";
 
 export function SettingsBar() {
-  const { settings, updateSettings } = useSettings();
-  const [isOpen, setIsOpen] = useState(false);
+  const { settings, updateSettings, isDrawerOpen, setDrawerOpen } = useSettings();
+
+  if (!isDrawerOpen) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      {/* Floating Glass Settings Panel */}
+    <>
+      {/* Backdrop */}
       <div 
-        className={`transition-all duration-300 ease-out mb-3 ${
-          isOpen 
-            ? "opacity-100 translate-y-0 scale-100" 
-            : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute bottom-12"
-        }`}
-      >
-        <div className="w-[calc(100vw-2rem)] max-w-md bg-white/90 dark:bg-black/85 backdrop-blur-xl border border-black/10 dark:border-white/20 p-4 sm:p-5 rounded-3xl shadow-2xl flex flex-col gap-4">
+        className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity"
+        onClick={() => setDrawerOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Glass Settings Panel (positioned under header right side) */}
+      <div className="fixed top-16 right-4 sm:right-8 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="w-[calc(100vw-2rem)] max-w-md bg-card-bg backdrop-blur-xl border border-border p-4 sm:p-5 rounded-3xl shadow-2xl flex flex-col gap-4 text-foreground">
           
+          {/* Panel Header */}
+          <div className="flex items-center justify-between pb-2 border-b border-border">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Display Settings</span>
+            <button 
+              onClick={() => setDrawerOpen(false)}
+              className="p-1 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close Settings"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
           {/* Top Row: Font Size Slider + Larivaar Toggle */}
-          <div className="flex items-center justify-between gap-3 pb-3 border-b border-black/5 dark:border-white/10">
+          <div className="flex items-center justify-between gap-3 pb-3 border-b border-border">
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
               <Type size={16} className="text-muted-foreground shrink-0" />
               <input 
@@ -29,21 +43,21 @@ export function SettingsBar() {
                 min="0.8" max="2" step="0.1" 
                 value={settings.fontSize}
                 onChange={(e) => updateSettings({ fontSize: parseFloat(e.target.value) })}
-                className="w-full h-1.5 bg-black/10 dark:bg-white/20 rounded-full appearance-none outline-none accent-primary cursor-pointer"
+                className="w-full h-1.5 bg-muted rounded-full appearance-none outline-none accent-primary cursor-pointer"
               />
               <span className="text-xs font-bold text-muted-foreground w-9 text-right shrink-0">
                 {Math.round(settings.fontSize * 100)}%
               </span>
             </div>
 
-            <div className="w-px h-5 bg-black/10 dark:bg-white/10 shrink-0" />
+            <div className="w-px h-5 bg-border shrink-0" />
             
             <button
               onClick={() => updateSettings({ larivaar: !settings.larivaar })}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 ${
                 settings.larivaar 
                   ? "bg-primary text-white shadow-sm" 
-                  : "bg-black/5 dark:bg-white/10 text-muted-foreground hover:text-foreground"
+                  : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
               }`}
               title="Toggle Larivaar (Continuous Text)"
             >
@@ -53,7 +67,7 @@ export function SettingsBar() {
           </div>
 
           {/* Theme Switcher */}
-          <div className="flex items-center justify-between gap-2 pb-3 border-b border-black/5 dark:border-white/10">
+          <div className="flex items-center justify-between gap-2 pb-3 border-b border-border">
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Theme</span>
             <div className="flex gap-1">
               {[
@@ -67,7 +81,7 @@ export function SettingsBar() {
                   className={`text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1 transition-all ${
                     settings.theme === id 
                       ? "bg-primary text-white shadow-sm" 
-                      : "bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground"
+                      : "bg-muted hover:bg-muted/80 text-foreground"
                   }`}
                 >
                   <Icon size={13} />
@@ -90,7 +104,7 @@ export function SettingsBar() {
                     className={`text-xs px-2.5 py-1 rounded-full font-medium transition-all ${
                       settings.transliteration === opt 
                         ? "bg-primary text-white shadow-sm" 
-                        : "bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground"
+                        : "bg-muted hover:bg-muted/80 text-foreground"
                     }`}
                   >
                     {opt === "en" ? "EN" : opt === "hi" ? "HI" : "OFF"}
@@ -110,7 +124,7 @@ export function SettingsBar() {
                     className={`text-xs px-2.5 py-1 rounded-full font-medium transition-all ${
                       settings.translation === opt 
                         ? "bg-primary text-white shadow-sm" 
-                        : "bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-foreground"
+                        : "bg-muted hover:bg-muted/80 text-foreground"
                     }`}
                   >
                     {opt === "en" ? "EN" : opt === "hi" ? "HI" : opt === "pa" ? "PA" : "OFF"}
@@ -122,15 +136,6 @@ export function SettingsBar() {
 
         </div>
       </div>
-
-      {/* Floating Toggle Button */}
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 dark:bg-black/85 backdrop-blur-xl border border-black/10 dark:border-white/20 shadow-xl text-foreground hover:bg-white dark:hover:bg-black transition-all active:scale-95"
-        aria-label="Toggle Display Settings"
-      >
-        {isOpen ? <X size={20} /> : <Settings size={20} />}
-      </button>
-    </div>
+    </>
   );
 }

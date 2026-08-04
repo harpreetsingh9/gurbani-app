@@ -5,6 +5,7 @@ import { DailyLine } from "@/components/home/DailyLine";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { SettingsBar } from "@/components/settings/SettingsBar";
+import { SettingsButton } from "@/components/settings/SettingsButton";
 
 export const revalidate = 86400;
 
@@ -16,11 +17,12 @@ export default async function Home() {
       {/* Header */}
       <header className="flex items-center justify-between py-6 mb-8 border-b border-black/5 dark:border-white/5">
         <h1 className="text-2xl font-bold tracking-tight">Nitnem</h1>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <StreakWidget />
-          <Link href="/search" className="p-2 -mr-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-            <Search size={20} className="text-muted-foreground" />
+          <Link href="/search" className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+            <Search size={20} />
           </Link>
+          <SettingsButton />
         </div>
       </header>
 
@@ -48,7 +50,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Floating Settings Bar */}
+      {/* Floating Settings Bar Dropdown */}
       <SettingsBar />
     </main>
   );

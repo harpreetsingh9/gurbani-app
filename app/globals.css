@@ -1,30 +1,59 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+/* Default Light Theme */
 :root {
+  color-scheme: light;
   --background: #fafafa; /* near-pure white */
   --foreground: #111111; /* near-black */
   --primary: #c2703d; /* muted kesari/saffron */
   --primary-foreground: #ffffff;
   --muted: #f3f4f6; /* gray-100 */
   --muted-foreground: #6b7280; /* gray-500 */
+  --border: rgba(0, 0, 0, 0.1);
+  --card-bg: #ffffff;
 }
 
-html.dark {
-  --background: #111111;
-  --foreground: #fafafa;
-  --primary: #c2703d;
-  --primary-foreground: #ffffff;
-  --muted: #1f2937; /* gray-800 */
-  --muted-foreground: #9ca3af; /* gray-400 */
+/* System Dark Mode (when neither .light nor .dark is explicitly set) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --background: #111111;
+    --foreground: #fafafa;
+    --primary: #c2703d;
+    --primary-foreground: #ffffff;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --border: rgba(255, 255, 255, 0.15);
+    --card-bg: #18181b;
+  }
 }
 
+/* Explicit Light Theme Override (overrides OS dark mode) */
 html.light {
-  --background: #fafafa;
-  --foreground: #111111;
-  --primary: #c2703d;
-  --primary-foreground: #ffffff;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
+  color-scheme: light !important;
+  --background: #fafafa !important;
+  --foreground: #111111 !important;
+  --primary: #c2703d !important;
+  --primary-foreground: #ffffff !important;
+  --muted: #f3f4f6 !important;
+  --muted-foreground: #6b7280 !important;
+  --border: rgba(0, 0, 0, 0.1) !important;
+  --card-bg: #ffffff !important;
+}
+
+/* Explicit Dark Theme Override (overrides OS light mode) */
+html.dark {
+  color-scheme: dark !important;
+  --background: #111111 !important;
+  --foreground: #fafafa !important;
+  --primary: #c2703d !important;
+  --primary-foreground: #ffffff !important;
+  --muted: #1f2937 !important;
+  --muted-foreground: #9ca3af !important;
+  --border: rgba(255, 255, 255, 0.15) !important;
+  --card-bg: #18181b !important;
 }
 
 @theme inline {
@@ -34,20 +63,11 @@ html.light {
   --color-primary-foreground: var(--primary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card-bg: var(--card-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-gurbani: var(--font-gurbani-akhar);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #111111;
-    --foreground: #fafafa;
-    --primary: #c2703d;
-    --primary-foreground: #ffffff;
-    --muted: #1f2937;
-    --muted-foreground: #9ca3af;
-  }
 }
 
 body {

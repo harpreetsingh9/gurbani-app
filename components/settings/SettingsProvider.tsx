@@ -30,17 +30,21 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 function applyThemeClass(theme: "light" | "dark" | "system") {
   const root = document.documentElement;
   root.classList.remove("light", "dark");
+  
   if (theme === "dark") {
     root.classList.add("dark");
+    root.style.colorScheme = "dark";
   } else if (theme === "light") {
     root.classList.add("light");
+    root.style.colorScheme = "light";
+  } else {
+    root.style.colorScheme = "";
   }
 }
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<LanguageSettings>(defaultSettings);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("gurbani_settings");
@@ -53,8 +57,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.error("Failed to parse settings", e);
       }
+    } else {
+      applyThemeClass("system");
     }
-    setMounted(true);
   }, []);
 
   const updateSettings = (newSettings: Partial<LanguageSettings>) => {
