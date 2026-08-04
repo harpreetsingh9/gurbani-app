@@ -1,0 +1,30 @@
+# Sikh Gurbani App (sikhi.vercel.app)
+
+> Free, fast, mobile-first Sikh Gurbani & Nitnem reading platform created by Harpreet Singh (https://singhharpreet.vercel.app). 
+> Provides original Gurmukhi script alongside English, Hindi, and Punjabi translations and English/Hindi phonetic transliterations.
+
+## Core Purpose
+The platform enables readers worldwide to study, read, and recite Sikh daily prayers (Nitnem) and scripture from the Sri Guru Granth Sahib Ji and Dasam Granth in a calm, distraction-free environment.
+
+## Primary Routes & Resources
+
+- [Sikh Gurbani Home & Library](https://sikhi.vercel.app): Complete library of 111+ Sikh Baanis including daily Nitnem.
+- [Japji Sahib](https://sikhi.vercel.app/bani/japji): First prayer composed by Guru Nanak Dev Ji with line-by-line Gurmukhi text and translations.
+- [Jaap Sahib](https://sikhi.vercel.app/bani/jaap): Composed by Guru Gobind Singh Ji.
+- [Tav-Prasad Savaiye](https://sikhi.vercel.app/bani/svaiye): Morning Nitnem prayer.
+- [Chaupai Sahib](https://sikhi.vercel.app/bani/chaupai): Prayer for protection composed by Guru Gobind Singh Ji.
+- [Anand Sahib](https://sikhi.vercel.app/bani/anand): Song of bliss composed by Guru Amar Das Ji.
+- [Rehras Sahib](https://sikhi.vercel.app/bani/rehras): Evening Nitnem prayer.
+- [Gurbani Search](https://sikhi.vercel.app/search): Real-time search engine for Gurbani verses.
+
+## Key Features for Readers
+- **Gurmukhi Unicode**: Accurate modern Gurmukhi script.
+- **Larivaar Mode**: Toggle continuous scripture text without word breaks.
+- **Multilingual Meanings**: English, Hindi, and Punjabi translations.
+- **Phonetic Transliteration**: English and Hindi Romanized text for pronunciation.
+- **Theme & Display Customization**: Light mode, Dark mode, font scaling, and reading progress indicators.
+
+## Developer & Creator Information
+- Created by: Harpreet Singh (https://singhharpreet.vercel.app)
+- Data Source: BaniDB Public API (https://api.banidb.com/v2)
+- Platform: Next.js 16 (App Router), Serwist PWA, Vercel
