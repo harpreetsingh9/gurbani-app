@@ -1,9 +1,10 @@
 import React from "react";
-import { getBaniList } from "@/lib/gurbani";
 import { StreakWidget } from "@/components/home/StreakWidget";
 import { DailyLine } from "@/components/home/DailyLine";
+import { QuickNitnem } from "@/components/home/QuickNitnem";
+import { ContinueReadingCard } from "@/components/home/ContinueReadingCard";
 import Link from "next/link";
-import { Search, ExternalLink, HelpCircle } from "lucide-react";
+import { Search, ExternalLink, HelpCircle, BookOpen, ChevronRight } from "lucide-react";
 import { SettingsBar } from "@/components/settings/SettingsBar";
 import { SettingsButton } from "@/components/settings/SettingsButton";
 import type { Metadata } from "next";
@@ -19,8 +20,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const baanis = await getBaniList();
-
   // FAQ Schema.org JSON-LD for AI Search Indexing (ChatGPT, Perplexity, Google SGE)
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -60,9 +59,12 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      {/* Header */}
-      <header className="flex items-center justify-between py-6 mb-8 border-b border-black/5 dark:border-white/5">
-        <h1 className="text-2xl font-bold tracking-tight">Nitnem</h1>
+      {/* Top Header */}
+      <header className="flex items-center justify-between py-6 mb-6 border-b border-black/5 dark:border-white/5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Nitnem Dashboard</h1>
+          <p className="text-xs text-muted-foreground">Daily Prayers & Sacred Scripture</p>
+        </div>
         <div className="flex items-center gap-3">
           <StreakWidget />
           <Link href="/search" className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" aria-label="Search Gurbani">
@@ -72,31 +74,41 @@ export default async function Home() {
         </div>
       </header>
 
+      {/* Hero Card: Resume Reading (if user has active reading history) */}
+      <ContinueReadingCard />
+
       {/* Daily Line Widget */}
       <DailyLine />
 
-      {/* Baanis List */}
-      <section className="mt-12">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">
-          Library / Baanis
-        </h2>
-        <div className="grid gap-2">
-          {baanis.map((bani) => (
-            <Link 
-              key={bani.slug} 
-              href={`/bani/${bani.slug}`}
-              className="flex items-center justify-between p-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
-            >
-              <div>
-                <h3 className="font-gurbani text-xl mb-1 group-hover:text-primary transition-colors">{bani.name.gurmukhi}</h3>
-                <p className="text-sm text-muted-foreground">{bani.name.en}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+      {/* Quick Nitnem & Frequent Baanis Grid */}
+      <QuickNitnem />
+
+      {/* Sundar Gutka Featured Banner Card */}
+      <section className="mb-12">
+        <Link
+          href="/gutka"
+          className="group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-amber-500/10 to-primary/5 border border-primary/20 flex items-center justify-between shadow-xs hover:shadow-md transition-all"
+        >
+          <div className="space-y-1 z-10">
+            <div className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider">
+              <BookOpen size={14} />
+              <span>Full Library</span>
+            </div>
+            <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              Explore Sundar Gutka
+            </h3>
+            <p className="text-xs text-muted-foreground max-w-sm">
+              Browse 113+ daily Nitnem prayers, Vaars, and holy compositions in Gurmukhi with translations.
+            </p>
+          </div>
+
+          <div className="p-3 rounded-full bg-primary text-primary-foreground group-hover:scale-110 transition-transform shrink-0">
+            <ChevronRight size={20} />
+          </div>
+        </Link>
       </section>
 
-      {/* Frequently Asked Questions (GEO / AI Search Optimized) */}
+      {/* Frequently Asked Questions */}
       <section className="mt-16 pt-8 border-t border-black/5 dark:border-white/5">
         <div className="flex items-center gap-2 mb-6 text-foreground">
           <HelpCircle size={18} className="text-primary" />

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getBaniBySlug, getBaniList } from "@/lib/gurbani";
 import { BaniReader } from "@/components/reader/BaniReader";
 import { ReadingHeader } from "@/components/reader/ReadingHeader";
@@ -100,7 +101,9 @@ export default async function BaniPage({ params }: { params: Promise<{ slug: str
       <ReadingHeader title={bani.name.gurmukhi} />
 
       {/* Reader */}
-      <BaniReader bani={bani} />
+      <Suspense fallback={null}>
+        <BaniReader bani={bani} />
+      </Suspense>
 
       {/* Floating Settings Bar Dropdown */}
       <SettingsBar />

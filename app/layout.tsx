@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Gurmukhi } from "next/font/google";
 import "./globals.css";
 import { SettingsProvider } from "@/components/settings/SettingsProvider";
+import { BottomNav } from "@/components/navigation/BottomNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -133,9 +134,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col pb-16 sm:pb-0">
         <SettingsProvider>
           {children}
+          <BottomNav />
         </SettingsProvider>
       </body>
     </html>
