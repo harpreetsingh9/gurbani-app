@@ -1,5 +1,6 @@
 import { BaniListItem, BaniResponse, NormalizedBani, NormalizedVerse, Verse } from "./types";
 import { normalizeVerse } from "./normalize";
+import { cache } from "react";
 
 const API_BASE = "https://api.banidb.com/v2";
 
@@ -15,29 +16,54 @@ const ALIAS_MAP: Record<string, string> = {
 };
 
 /**
- * Fetch raw Bani list from BaniDB API
+ * Helper to fetch with retry for resiliency against BaniDB API rate limits or transient errors
  */
-async function fetchBaniListRaw(): Promise<BaniListItem[]> {
+async function fetchWithRetry(url: string, init?: RequestInit, retries = 3, delayMs = 400): Promise<Response> {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await fetch(url, init);
+      if (res.ok || res.status === 404) {
+        return res;
+      }
+      if (attempt < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * (attempt + 1)));
+      } else {
+        return res;
+      }
+    } catch (err) {
+      if (attempt < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * (attempt + 1)));
+      } else {
+        throw err;
+      }
+    }
+  }
+  return fetch(url, init);
+}
+
+/**
+ * Fetch raw Bani list from BaniDB API
+ * Uses React cache to deduplicate during single render cycle.
+ */
+const fetchBaniListRaw = cache(async (): Promise<BaniListItem[]> => {
   try {
-    const res = await fetch(`${API_BASE}/banis`, { next: { revalidate: 86400 } });
+    const res = await fetchWithRetry(`${API_BASE}/banis`, { next: { revalidate: 86400 } });
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {
     console.error("Error fetching raw Bani list:", error);
     return [];
   }
-}
+});
 
 /**
  * Get all available baanis (for home page lists, etc.)
- * Uses Next.js ISR caching (revalidate every 24 hours).
  */
 export async function getBaniList(): Promise<{ slug: string; name: { gurmukhi: string; en: string; hi: string } }[]> {
   const data = await fetchBaniListRaw();
   return data.map((bani) => ({
     slug: bani.token,
     name: {
-      // Use gurmukhiUni for modern Unicode Gurmukhi text rendering
       gurmukhi: bani.gurmukhiUni || bani.gurmukhi,
       en: bani.transliterations?.english || bani.transliterations?.en || bani.token,
       hi: bani.transliterations?.hindi || bani.transliterations?.hi || bani.token,
@@ -47,8 +73,9 @@ export async function getBaniList(): Promise<{ slug: string; name: { gurmukhi: s
 
 /**
  * Get a specific Bani by its slug (token or numeric ID) and normalize it.
+ * Wrapped with React cache to deduplicate requests across generateMetadata and page component.
  */
-export async function getBaniBySlug(slug: string): Promise<NormalizedBani | null> {
+export const getBaniBySlug = cache(async (slug: string): Promise<NormalizedBani | null> => {
   try {
     const normalizedSlug = slug.toLowerCase();
     const targetToken = ALIAS_MAP[normalizedSlug] || normalizedSlug;
@@ -66,7 +93,7 @@ export async function getBaniBySlug(slug: string): Promise<NormalizedBani | null
       return null;
     }
 
-    const res = await fetch(`${API_BASE}/banis/${numericID}`, { next: { revalidate: 86400 } });
+    const res = await fetchWithRetry(`${API_BASE}/banis/${numericID}`, { next: { revalidate: 86400 } });
     if (!res.ok) {
       if (res.status === 404) return null;
       throw new Error(`Failed to fetch Bani ID ${numericID} (slug: ${slug})`);
@@ -91,16 +118,15 @@ export async function getBaniBySlug(slug: string): Promise<NormalizedBani | null
     console.error(`Error in getBaniBySlug(${slug}):`, error);
     return null;
   }
-}
+});
 
 /**
  * Get a random line for the daily widget.
  * Source ID 'G' refers to Sri Guru Granth Sahib Ji.
- * Uses revalidate: 3600 so it rotates periodically rather than on every request.
  */
-export async function getRandomLine(): Promise<NormalizedVerse | null> {
+export const getRandomLine = cache(async (): Promise<NormalizedVerse | null> => {
   try {
-    const res = await fetch(`${API_BASE}/random/G`, { next: { revalidate: 3600 } });
+    const res = await fetchWithRetry(`${API_BASE}/random/G`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error("Failed to fetch random line");
 
     const data: { verses: Verse[] } = await res.json();
@@ -113,4 +139,7 @@ export async function getRandomLine(): Promise<NormalizedVerse | null> {
     console.error("Error in getRandomLine:", error);
     return null;
   }
-}
+});
+
+
+
