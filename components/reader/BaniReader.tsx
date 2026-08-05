@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSettings } from "../settings/SettingsProvider";
 import { NormalizedBani, NormalizedVerse } from "@/lib/gurbani/types";
 import { saveReadingProgress, getReadingProgress } from "@/lib/reading-progress";
+import { recordBaniRead } from "@/lib/insights-storage";
 import { useSearchParams } from "next/navigation";
 import { Check } from "lucide-react";
 
@@ -66,6 +67,11 @@ export function BaniReader({ bani }: { bani: NormalizedBani }) {
               totalVerses: bani.verses.length,
               versePreview: verseObj?.gurmukhi || "",
             });
+
+            // If user reaches last 3 verses, record completion in insights
+            if (idx >= Math.max(1, bani.verses.length - 2)) {
+              recordBaniRead(bani.slug, bani.name.gurmukhi, bani.name.en);
+            }
           }
         }
       });

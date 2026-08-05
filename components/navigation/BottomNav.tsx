@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, BookOpen, Search, History } from "lucide-react";
+import { LayoutGrid, BookOpen, TrendingUp, History } from "lucide-react";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -22,9 +22,9 @@ export function BottomNav() {
       exact: false,
     },
     {
-      label: "Search",
-      href: "/search",
-      icon: Search,
+      label: "Insights",
+      href: "/insights",
+      icon: TrendingUp,
       exact: false,
     },
     {

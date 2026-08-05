@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Sans_Gurmukhi } from "next/font/google";
 import "./globals.css";
 import { SettingsProvider } from "@/components/settings/SettingsProvider";
 import { BottomNav } from "@/components/navigation/BottomNav";
+import { TopNav } from "@/components/navigation/TopNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -136,6 +137,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col pb-16 sm:pb-0">
         <SettingsProvider>
+          <TopNav />
           {children}
           <BottomNav />
         </SettingsProvider>
