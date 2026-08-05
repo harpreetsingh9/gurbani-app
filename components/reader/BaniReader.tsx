@@ -6,14 +6,22 @@ import { NormalizedBani, NormalizedVerse } from "@/lib/gurbani/types";
 import { saveReadingProgress, getReadingProgress } from "@/lib/reading-progress";
 import { recordBaniRead } from "@/lib/insights-storage";
 import { useSearchParams } from "next/navigation";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
+import { AiExplainDrawer } from "./AiExplainDrawer";
 
 export function BaniReader({ bani }: { bani: NormalizedBani }) {
   const { settings } = useSettings();
   const searchParams = useSearchParams();
   const [currentVerseIndex, setCurrentVerseIndex] = useState<number>(1);
   const [restoredVerse, setRestoredVerse] = useState<number | null>(null);
+  const [selectedAiVerse, setSelectedAiVerse] = useState<NormalizedVerse | null>(null);
+  const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const handleOpenAi = (verse: NormalizedVerse) => {
+    setSelectedAiVerse(verse);
+    setIsAiDrawerOpen(true);
+  };
 
   const applyLarivaar = (text: string) => {
     if (!settings.larivaar) return text;
@@ -166,10 +174,32 @@ export function BaniReader({ bani }: { bani: NormalizedBani }) {
                   {displayMeaning}
                 </p>
               )}
+
+              {/* Ask AI Action Button */}
+              <button
+                onClick={() => handleOpenAi(verse)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 hover:bg-primary/15 text-primary border border-primary/20 text-[11px] font-semibold transition-all mt-2 opacity-90 hover:opacity-100 active:scale-95 shadow-2xs"
+                title="Ask AI for 7-part Gurbani insights"
+              >
+                <Sparkles size={12} />
+                <span>Ask AI</span>
+              </button>
             </div>
           );
         })}
       </div>
+
+      {/* AI Explanation Drawer Modal */}
+      {selectedAiVerse && (
+        <AiExplainDrawer
+          isOpen={isAiDrawerOpen}
+          onClose={() => setIsAiDrawerOpen(false)}
+          verseGurmukhi={selectedAiVerse.gurmukhi}
+          verseEnglish={selectedAiVerse.meaning.en}
+          verseTransliteration={selectedAiVerse.transliteration.en}
+          baniName={bani.name.en}
+        />
+      )}
     </div>
   );
 }
