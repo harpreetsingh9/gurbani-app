@@ -3,6 +3,7 @@ import { StreakWidget } from "@/components/home/StreakWidget";
 import { DailyLine } from "@/components/home/DailyLine";
 import { QuickNitnem } from "@/components/home/QuickNitnem";
 import { ContinueReadingCard } from "@/components/home/ContinueReadingCard";
+import { LiveKirtanCard } from "@/components/kirtan/LiveKirtanCard";
 import Link from "next/link";
 import { Search, ExternalLink, HelpCircle, BookOpen, ChevronRight } from "lucide-react";
 import { SettingsBar } from "@/components/settings/SettingsBar";
@@ -76,6 +77,9 @@ export default async function Home() {
 
       {/* Hero Card: Resume Reading (if user has active reading history) */}
       <ContinueReadingCard />
+
+      {/* Live Kirtan Player Card (Official SGPC Harmandir Sahib Stream) */}
+      <LiveKirtanCard />
 
       {/* Daily Line Widget */}
       <DailyLine />
