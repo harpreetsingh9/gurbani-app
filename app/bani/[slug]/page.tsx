@@ -69,7 +69,7 @@ export default async function BaniPage({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
-  // Schema.org Article / Book JSON-LD for rich Google snippets
+  // Schema.org Article & BreadcrumbList JSON-LD for rich Google snippets
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -90,11 +90,36 @@ export default async function BaniPage({ params }: { params: Promise<{ slug: str
     "mainEntityOfPage": `https://sikhi.vercel.app/bani/${resolvedParams.slug}`
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://sikhi.vercel.app"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Sundar Gutka",
+        "item": "https://sikhi.vercel.app/gutka"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": bani.name.en,
+        "item": `https://sikhi.vercel.app/bani/${resolvedParams.slug}`
+      }
+    ]
+  };
+
   return (
     <main className="flex-1 w-full relative">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbJsonLd]) }}
       />
 
       {/* Sticky Reading Header with Scroll Progress Line & Settings Button */}

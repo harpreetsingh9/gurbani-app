@@ -1,25 +1,32 @@
 # Sikh Gurbani App (sikhi.vercel.app)
 
 > Free, fast, mobile-first Sikh Gurbani & Nitnem reading platform created by Harpreet Singh (https://singhharpreet.vercel.app). 
-> Provides original Gurmukhi script alongside English, Hindi, and Punjabi translations and English/Hindi phonetic transliterations.
+> Provides original Gurmukhi script alongside English, Hindi, and Punjabi translations, English/Hindi phonetic transliterations, and Gurbani AI Insights.
 
 ## Core Purpose
 The platform enables readers worldwide to study, read, and recite Sikh daily prayers (Nitnem) and scripture from the Sri Guru Granth Sahib Ji and Dasam Granth in a calm, distraction-free environment.
 
 ## Primary Routes & Resources
 
-- [Sikh Gurbani Home & Library](https://sikhi.vercel.app): Complete library of 111+ Sikh Baanis including daily Nitnem.
+- [Sikh Gurbani Home & Dashboard](https://sikhi.vercel.app): Personal Nitnem Dashboard with streak counter, resume reading card, and live SGPC Kirtan stream.
+- [Sundar Gutka Library](https://sikhi.vercel.app/gutka): Complete scripture library of 113+ Sikh Baanis and daily Nitnem prayers.
+- [Reading Insights & Analytics](https://sikhi.vercel.app/insights): Personal reading statistics, consistency scores, habits, and milestone celebrations.
+- [Reading History & Progress](https://sikhi.vercel.app/history): Saved reading history and exact verse scroll positions.
 - [Japji Sahib](https://sikhi.vercel.app/bani/japji): First prayer composed by Guru Nanak Dev Ji with line-by-line Gurmukhi text and translations.
 - [Jaap Sahib](https://sikhi.vercel.app/bani/jaap): Composed by Guru Gobind Singh Ji.
 - [Tav-Prasad Savaiye](https://sikhi.vercel.app/bani/svaiye): Morning Nitnem prayer.
 - [Chaupai Sahib](https://sikhi.vercel.app/bani/chaupai): Prayer for protection composed by Guru Gobind Singh Ji.
 - [Anand Sahib](https://sikhi.vercel.app/bani/anand): Song of bliss composed by Guru Amar Das Ji.
 - [Rehras Sahib](https://sikhi.vercel.app/bani/rehras): Evening Nitnem prayer.
+- [Sukhmani Sahib](https://sikhi.vercel.app/bani/sukhmani): Psalm of Peace composed by Guru Arjan Dev Ji.
 - [Gurbani Search](https://sikhi.vercel.app/search): Real-time search engine for Gurbani verses.
 
 ## Key Features for Readers
 - **Gurmukhi Unicode**: Accurate modern Gurmukhi script.
+- **Ask AI Gurbani Insights**: Deep 7-part AI spiritual explanations (Punjabi, English, History, Philosophy, Key Teaching, References, Daily Life) powered by Gemini AI.
+- **Live Gurbani Kirtan**: Official 24/7 SGPC live audio broadcast from Sri Harmandir Sahib (Golden Temple, Amritsar).
 - **Larivaar Mode**: Toggle continuous scripture text without word breaks.
+- **Automatic Position Resume**: Remembers and auto-scrolls to your exact last read verse line across all Baanis.
 - **Multilingual Meanings**: English, Hindi, and Punjabi translations.
 - **Phonetic Transliteration**: English and Hindi Romanized text for pronunciation.
 - **Theme & Display Customization**: Light mode, Dark mode, font scaling, and reading progress indicators.
@@ -27,4 +34,4 @@ The platform enables readers worldwide to study, read, and recite Sikh daily pra
 ## Developer & Creator Information
 - Created by: Harpreet Singh (https://singhharpreet.vercel.app)
 - Data Source: BaniDB Public API (https://api.banidb.com/v2)
-- Platform: Next.js 16 (App Router), Serwist PWA, Vercel
+- Platform: Next.js 16 (App Router), Vercel AI SDK, Serwist PWA, Vercel
